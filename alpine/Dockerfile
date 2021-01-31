@@ -3,7 +3,7 @@
 #
 FROM node:8-alpine 
 
-LABEL Author="MiGoller"
+LABEL Author="JMoore"
 
 # Set environment variables to default values
 ENV ADMIN_USER=admin@shinobi.video \
@@ -27,7 +27,7 @@ RUN mkdir -p /opt/shinobi
 WORKDIR /opt/shinobi
 
 # Install package dependencies
-RUN apk add --update --no-cache ffmpeg python pkgconfig make g++ jpeg-dev git ttf-freefont mysql-client wget tar xz sqlite socat
+RUN apk add --update --no-cache ffmpeg python3-dev pkgconfig make g++ jpeg-dev git ttf-freefont mysql-client wget tar xz sqlite socat
 
 # Install ffmpeg static build version from cdn.shinobi.video
 RUN wget https://cdn.shinobi.video/installers/ffmpeg-release-64bit-static.tar.xz
@@ -38,6 +38,11 @@ RUN tar xpvf ./ffmpeg-release-64bit-static.tar.xz -C ./ \
 
 RUN rm -f ffmpeg-release-64bit-static.tar.xz \
     && rm -rf ./ffmpeg-3.3.4-64bit-static
+
+#Install dependecies for Google Coral Shinobi Integration
+RUN pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime \
+	&& pip3 install pillow
+	&& pip3 install numpy
 
 # Clone the Shinobi CCTV PRO repo
 RUN mkdir master_temp
